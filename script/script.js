@@ -49,7 +49,7 @@ function create(){
             span.setAttribute('class','box')
         }
         
-        box = this.add.dom(20*(i+1)-28*20,20,span);
+        box = this.add.dom(20*(i+1)-28*20,100,span);
         if(i<s_len-vis_len){
             box.setVisible(false);
             box.setActive(false);
@@ -209,7 +209,7 @@ function move(){
         }
     }
     contact();
-    for(let k = s_len;k<s_len - vis_len;k--){
+    for(let k = s_len-2;k>s_len - vis_len-1;k--){
         if(snake[s_len-1].x==snake[k].x && snake[s_len-1].y==snake[k].y){
             clearInterval(play);
             game_over.setVisible(true)
@@ -240,12 +240,12 @@ function contact() {
                 q = setInterval(function(){
                     val-=2;
                     document.getElementById('p').setAttribute('value',val);
-                    if(val==0){
+                    if(val==0 && p.setVisible()==true){
                         clearInterval(q);
                         val=100;
                         food.setVisible(false);
-                        food.x = Phaser.Math.Between(40,W-80);
-                        food.y = Phaser.Math.Between(40,H-80);
+                        food.x = Phaser.Math.Between(1,parseInt(W/20))*20;
+                        food.y = Phaser.Math.Between(1,parseInt(H/20))*20;
                         setTimeout(function(){
                             size=18;
                             document.getElementById('food').style.height=size+'px';
@@ -275,12 +275,14 @@ function contact() {
                 
             }
             food.setVisible(false)
-            food.x = Phaser.Math.Between(40,W-80);
-            food.y = Phaser.Math.Between(40,H-80);
+            food.x = Phaser.Math.Between(1,parseInt(W/60))*60;
+            food.y = Phaser.Math.Between(1,parseInt(W/60))*60;
             setTimeout(function(){
                 food.setVisible(true);
                 n+=1
             },500);
+            return true
         }
     }
+    return false
 }
