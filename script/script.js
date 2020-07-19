@@ -5,6 +5,9 @@ let direction;
 let pointer;
 let score=0;
 let score_text;
+let size= 18;
+let p;
+let val=100;
 let config={
     width:window.innerWidth-8,
     height:window.innerHeight-8,
@@ -41,20 +44,26 @@ function create(){
         
     }
     direction='right';
-    setInterval(move,150)
+    setInterval(move,100)
     this.input.keyboard.on('keydown-' + 'UP', up);
     this.input.keyboard.on('keydown-' + 'RIGHT', right);
     this.input.keyboard.on('keydown-' + 'DOWN', down);
     this.input.keyboard.on('keydown-' + 'LEFT', left);
     this.input.on('pointerdown',slide,this);
     food = document.createElement('span');
-    food.setAttribute('class','food');
+    food.setAttribute('id','food');
     food=this.add.dom(Phaser.Math.Between(70,W),Phaser.Math.Between(30,H),food);
     food.setVisible(false);
     setTimeout(function(){
         food.setVisible(true);
     },500);
     score_text = this.add.text(10,10,`Score: ${score}`)
+    p = document.createElement('progress');
+    p.setAttribute('value','100');
+    p.setAttribute('max','100');
+    p.setAttribute('id','p')
+    p = this.add.dom(W-100,20,p);
+    p.setVisible(false);
 
 }
 function update(){
@@ -90,7 +99,7 @@ function down(){
         direction='down';
         setTimeout(function(){
             snake[s_len-1].angle = 90;
-        },150)
+        },100)
     }
 }
 function right(){
@@ -98,7 +107,7 @@ function right(){
         direction='right';
         setTimeout(function(){
             snake[s_len-1].angle = 0;
-        },150)
+        },100)
     }
 }
 function up(){
@@ -106,7 +115,7 @@ function up(){
         direction='up';
         setTimeout(function(){
             snake[s_len-1].angle = -90;
-        },150)
+        },100)
     }
 }
 function left(){
@@ -114,7 +123,7 @@ function left(){
         direction='left';
         setTimeout(function(){
             snake[s_len-1].angle = 180;
-        },150)
+        },100)
     }
 }
 function move(){
@@ -180,16 +189,49 @@ function contact(obj1, obj2) {
     obj2=food;
     var distX = Math.abs(obj1.x - obj2.x);
     var distY = Math.abs(obj1.y - obj2.y);
-    if (distX < 20 ) {
-        if (distY < 20) {
-            score+=1;
-            score_text.setText(`Score: ${score}`);
+    if (distX <= size) {
+        if (distY <= size) {
+            p.setVisible(false);
+            if(score%3==0){
+                score+=10;
+                score_text.setText(`Score: ${score}`);
+                size=60;
+                document.getElementById('food').style.height=size+'px';
+                document.getElementById('food').style.width=size+'px';
+                document.getElementById('food').style.animationName = 'bonus';
+                p.setVisible(true);
+                q = setInterval(function(){
+                    val-=5;
+                    document.getElementById('p').setAttribute('value',val);
+                    console.log(val)
+                    if(val==0){
+                        clearInterval(q);
+                        val=100;
+                        food.setVisible(false)
+                        food.x = Phaser.Math.Between(40,W-80);
+                        food.y = Phaser.Math.Between(40,H-80);
+                        setTimeout(function(){
+                            food.setVisible(true);
+                        },500);
+                    }
+                },100)
+
+
+            }else{
+                score+=1;
+                score_text.setText(`Score: ${score}`);
+                size=18
+                document.getElementById('food').style.height=size+'px';
+                document.getElementById('food').style.width=size+'px';
+                document.getElementById('food').style.animationName = 'none';
+                
+            }
             food.setVisible(false)
-            food.x = Phaser.Math.Between(20,W-40);
-            food.y = Phaser.Math.Between(20,H-40);
+            food.x = Phaser.Math.Between(40,W-80);
+            food.y = Phaser.Math.Between(40,H-80);
             setTimeout(function(){
                 food.setVisible(true);
-            },1000);
+            },500);
         }
     }
 }
