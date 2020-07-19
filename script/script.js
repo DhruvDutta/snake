@@ -67,12 +67,12 @@ function slide(){
             }
         }else{
             if(y2-y1>0){
-                direction='up'
+                direction='down'
             }else{
-                direction='down';
+                direction='up';
             }
         }
-    },500)
+    },200)
 
 }
 function down(){
