@@ -1,6 +1,6 @@
 let snake={};
 let food;
-let s_len=3;
+let s_len=4;
 let direction;
 let pointer;
 let config={
@@ -62,14 +62,18 @@ function slide(){
         if(Math.abs(x2-x1)>Math.abs(y2-y1)){
             if(x2-x1>0){
                 direction='right';
+                right();
             }else{
                 direction='left';
+                left();
             }
         }else{
             if(y2-y1>0){
                 direction='down'
+                down();
             }else{
                 direction='up';
+                up();
             }
         }
     },200)
