@@ -207,7 +207,6 @@ function contact(obj1, obj2) {
     var distY = Math.abs(obj1.y - obj2.y);
     if (distX <= size) {
         if (distY <= size) {
-            p.setVisible(false);
             if(n%3==0){
                 score+=10;
                 score_text.setText(`Score: ${score}`);
@@ -233,10 +232,12 @@ function contact(obj1, obj2) {
                             document.getElementById('food').style.width=size+'px';
                             document.getElementById('food').style.animationName = 'none';
                             food.setVisible(true);
+                            p.setVisible(false);
                             n+=1;
                         },500);
                     }
                 },70)
+
 
 
             }else{
@@ -254,6 +255,7 @@ function contact(obj1, obj2) {
             food.y = Phaser.Math.Between(40,H-80);
             setTimeout(function(){
                 food.setVisible(true);
+                p.setVisible(false);
                 n+=1
             },500);
         }
