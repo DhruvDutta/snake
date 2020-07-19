@@ -1,6 +1,7 @@
 let snake=[];
 let food;
-let s_len=3;
+let s_len=30;
+let vis_len=3;
 let direction;
 let pointer;
 let score=0;
@@ -48,12 +49,15 @@ function create(){
             span.setAttribute('class','box')
         }
         
-        box = this.add.dom(20*(i+1),20,span);
+        box = this.add.dom(20*(i+1)-28*20,20,span);
+        if(i<s_len-vis_len){
+            box.setVisible(false);
+            box.setActive(false);
+        }
         snake.push(box);
-        
     }
     direction='right';
-    play = setInterval(move,100)
+    play = setInterval(move,100,this)
     this.input.keyboard.on('keydown-' + 'UP', up);
     this.input.keyboard.on('keydown-' + 'RIGHT', right);
     this.input.keyboard.on('keydown-' + 'DOWN', down);
@@ -205,14 +209,14 @@ function move(){
         }
     }
     contact();
-    for(let k = 0;k<s_len-1;k++){
+    for(let k = s_len;k<s_len - vis_len;k--){
         if(snake[s_len-1].x==snake[k].x && snake[s_len-1].y==snake[k].y){
             clearInterval(play);
             game_over.setVisible(true)
         }
     }
 }
-function contact(obj1, obj2) {
+function contact() {
     obj1=snake[s_len-1];
     obj2=food;
     var distX = Math.abs(obj1.x - obj2.x);
@@ -222,6 +226,9 @@ function contact(obj1, obj2) {
             p.setVisible(false);
             if(n%3==0){
                 score+=10;
+                vis_len+=1;
+                snake[s_len-vis_len].setActive(true)
+                snake[s_len-vis_len].setVisible(true)
                 score_text.setText(`Score: ${score}`);
                 high_score();
                 size=60;
@@ -229,6 +236,7 @@ function contact(obj1, obj2) {
                 document.getElementById('food').style.width=size+'px';
                 document.getElementById('food').style.animationName = 'bonus';
                 p.setVisible(true);
+                val=100;
                 q = setInterval(function(){
                     val-=2;
                     document.getElementById('p').setAttribute('value',val);
@@ -247,6 +255,7 @@ function contact(obj1, obj2) {
                             p.setVisible(false);
                             n+=1;
                         },500);
+                        return
                     }
                 },70)
 
@@ -254,10 +263,10 @@ function contact(obj1, obj2) {
 
             }else{
                 score+=1;
+                vis_len+=1;
+                snake[s_len-vis_len].setActive(true)
+                snake[s_len-vis_len].setVisible(true)
                 score_text.setText(`Score: ${score}`);
-                snake.unshift(snake[0]);
-                s_len+=1;
-                console.log(snake,s_len)
                 high_score();
                 size=18
                 document.getElementById('food').style.height=size+'px';
