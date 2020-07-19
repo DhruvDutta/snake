@@ -1,6 +1,6 @@
 let snake={};
 let food;
-let s_len=30;
+let s_len=3;
 let direction;
 let pointer;
 let score=0;
