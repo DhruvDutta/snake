@@ -1,4 +1,4 @@
-let snake={};
+let snake=[];
 let food;
 let s_len=3;
 let direction;
@@ -49,7 +49,7 @@ function create(){
         }
         
         box = this.add.dom(20*(i+1),20,span);
-        snake[i]=box;
+        snake.push(box);
         
     }
     direction='right';
@@ -219,6 +219,7 @@ function contact(obj1, obj2) {
     var distY = Math.abs(obj1.y - obj2.y);
     if (distX <= size) {
         if (distY <= size) {
+            p.setVisible(false);
             if(n%3==0){
                 score+=10;
                 score_text.setText(`Score: ${score}`);
@@ -231,7 +232,6 @@ function contact(obj1, obj2) {
                 q = setInterval(function(){
                     val-=2;
                     document.getElementById('p').setAttribute('value',val);
-                    console.log(val)
                     if(val==0){
                         clearInterval(q);
                         val=100;
@@ -255,6 +255,9 @@ function contact(obj1, obj2) {
             }else{
                 score+=1;
                 score_text.setText(`Score: ${score}`);
+                snake.unshift(snake[0]);
+                s_len+=1;
+                console.log(snake,s_len)
                 high_score();
                 size=18
                 document.getElementById('food').style.height=size+'px';
@@ -267,7 +270,6 @@ function contact(obj1, obj2) {
             food.y = Phaser.Math.Between(40,H-80);
             setTimeout(function(){
                 food.setVisible(true);
-                p.setVisible(false);
                 n+=1
             },500);
         }
