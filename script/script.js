@@ -8,6 +8,7 @@ let score_text;
 let size= 18;
 let p;
 let val=100;
+let n=1;
 let config={
     width:window.innerWidth-8,
     height:window.innerHeight-8,
@@ -56,6 +57,7 @@ function create(){
     food.setVisible(false);
     setTimeout(function(){
         food.setVisible(true);
+        n+=1;
     },500);
     score_text = this.add.text(10,10,`Score: ${score}`)
     p = document.createElement('progress');
@@ -192,7 +194,7 @@ function contact(obj1, obj2) {
     if (distX <= size) {
         if (distY <= size) {
             p.setVisible(false);
-            if(score%3==0){
+            if(n%3==0){
                 score+=10;
                 score_text.setText(`Score: ${score}`);
                 size=60;
@@ -201,17 +203,22 @@ function contact(obj1, obj2) {
                 document.getElementById('food').style.animationName = 'bonus';
                 p.setVisible(true);
                 q = setInterval(function(){
-                    val-=5;
+                    val-=2;
                     document.getElementById('p').setAttribute('value',val);
                     console.log(val)
                     if(val==0){
                         clearInterval(q);
                         val=100;
-                        food.setVisible(false)
+                        food.setVisible(false);
                         food.x = Phaser.Math.Between(40,W-80);
                         food.y = Phaser.Math.Between(40,H-80);
                         setTimeout(function(){
+                            size=18;
+                            document.getElementById('food').style.height=size+'px';
+                            document.getElementById('food').style.width=size+'px';
+                            document.getElementById('food').style.animationName = 'none';
                             food.setVisible(true);
+                            n+=1;
                         },500);
                     }
                 },100)
@@ -231,6 +238,7 @@ function contact(obj1, obj2) {
             food.y = Phaser.Math.Between(40,H-80);
             setTimeout(function(){
                 food.setVisible(true);
+                n+=1
             },500);
         }
     }
