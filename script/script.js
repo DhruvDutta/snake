@@ -1,6 +1,6 @@
 let snake={};
 let food;
-let s_len=3;
+let s_len=30;
 let direction;
 let pointer;
 let score=0;
@@ -10,6 +10,8 @@ let size= 18;
 let p;
 let val=100;
 let n=1;
+let play;
+let game_over;
 if(localStorage.getItem('snake')==null){
     localStorage.setItem('snake',0)
 }else{
@@ -51,7 +53,7 @@ function create(){
         
     }
     direction='right';
-    setInterval(move,100)
+    play = setInterval(move,100)
     this.input.keyboard.on('keydown-' + 'UP', up);
     this.input.keyboard.on('keydown-' + 'RIGHT', right);
     this.input.keyboard.on('keydown-' + 'DOWN', down);
@@ -67,6 +69,10 @@ function create(){
     },500);
     highscore_text = this.add.text(10,10,`High: ${localStorage.getItem('snake')}`)
     score_text = this.add.text(10,30,`Score: ${score}`)
+    game_over = this.add.text(W/2,H/2,'Game Over',{font:'50px'})
+    game_over.x = W/2-(game_over.width)/2;
+    game_over.y = H/2-(game_over.height)/2;
+    game_over.setVisible(false);
 
     p = document.createElement('progress');
     p.setAttribute('value','100');
@@ -198,7 +204,13 @@ function move(){
             }
         }
     }
-    contact()
+    contact();
+    for(let k = 0;k<s_len-1;k++){
+        if(snake[s_len-1].x==snake[k].x && snake[s_len-1].y==snake[k].y){
+            clearInterval(play);
+            game_over.setVisible(true)
+        }
+    }
 }
 function contact(obj1, obj2) {
     obj1=snake[s_len-1];
