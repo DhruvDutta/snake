@@ -5,10 +5,16 @@ let direction;
 let pointer;
 let score=0;
 let score_text;
+let highscore_text;
 let size= 18;
 let p;
 let val=100;
 let n=1;
+if(localStorage.getItem('snake')==null){
+    localStorage.setItem('snake',0)
+}else{
+    gamebest = localStorage.getItem('snake')
+}
 let config={
     width:window.innerWidth-8,
     height:window.innerHeight-8,
@@ -59,7 +65,9 @@ function create(){
         food.setVisible(true);
         n+=1;
     },500);
-    score_text = this.add.text(10,10,`Score: ${score}`)
+    highscore_text = this.add.text(10,10,`High: ${localStorage.getItem('snake')}`)
+    score_text = this.add.text(10,30,`Score: ${score}`)
+
     p = document.createElement('progress');
     p.setAttribute('value','100');
     p.setAttribute('max','100');
@@ -70,6 +78,12 @@ function create(){
 }
 function update(){
     
+}
+function high_score(){
+    if(score>localStorage.getItem('snake')){
+        localStorage.setItem('snake',score);
+        highscore_text.setText(`High: ${score}`)
+    }
 }
 function slide(){
     pointer = this.input.activePointer;
@@ -197,6 +211,7 @@ function contact(obj1, obj2) {
             if(n%3==0){
                 score+=10;
                 score_text.setText(`Score: ${score}`);
+                high_score();
                 size=60;
                 document.getElementById('food').style.height=size+'px';
                 document.getElementById('food').style.width=size+'px';
@@ -221,12 +236,13 @@ function contact(obj1, obj2) {
                             n+=1;
                         },500);
                     }
-                },100)
+                },70)
 
 
             }else{
                 score+=1;
                 score_text.setText(`Score: ${score}`);
+                high_score();
                 size=18
                 document.getElementById('food').style.height=size+'px';
                 document.getElementById('food').style.width=size+'px';
