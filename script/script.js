@@ -1,12 +1,15 @@
 let snake={};
 let food;
-let s_len=4;
+let s_len=3;
 let direction;
 let pointer;
+let score=0;
+let score_text;
 let config={
     width:window.innerWidth-8,
     height:window.innerHeight-8,
     parent:'page',
+    physics: { default: 'arcade' },
     dom:{
         createContainer:true
     },
@@ -44,7 +47,14 @@ function create(){
     this.input.keyboard.on('keydown-' + 'DOWN', down);
     this.input.keyboard.on('keydown-' + 'LEFT', left);
     this.input.on('pointerdown',slide,this);
-
+    food = document.createElement('span');
+    food.setAttribute('class','food');
+    food=this.add.dom(Phaser.Math.Between(70,W),Phaser.Math.Between(30,H),food);
+    food.setVisible(false);
+    setTimeout(function(){
+        food.setVisible(true);
+    },500);
+    score_text = this.add.text(10,10,`Score: ${score}`)
 
 }
 function update(){
@@ -61,18 +71,14 @@ function slide(){
         y2 = pointer.y;
         if(Math.abs(x2-x1)>Math.abs(y2-y1)){
             if(x2-x1>0){
-                direction='right';
                 right();
             }else{
-                direction='left';
                 left();
             }
         }else{
             if(y2-y1>0){
-                direction='down'
                 down();
             }else{
-                direction='up';
                 up();
             }
         }
@@ -80,28 +86,36 @@ function slide(){
 
 }
 function down(){
-    direction='down';
-    setTimeout(function(){
-        snake[s_len-1].angle = 90;
-    },100)
+    if(direction!='up'){
+        direction='down';
+        setTimeout(function(){
+            snake[s_len-1].angle = 90;
+        },150)
+    }
 }
 function right(){
-    direction='right';
-    setTimeout(function(){
-        snake[s_len-1].angle = 0;
-    },100)
+    if(direction!='left'){
+        direction='right';
+        setTimeout(function(){
+            snake[s_len-1].angle = 0;
+        },150)
+    }
 }
 function up(){
-    direction='up';
-    setTimeout(function(){
-        snake[s_len-1].angle = -90;
-    },100)
+    if(direction!='down'){
+        direction='up';
+        setTimeout(function(){
+            snake[s_len-1].angle = -90;
+        },150)
+    }
 }
 function left(){
-    direction='left';
-    setTimeout(function(){
-        snake[s_len-1].angle = 180;
-    },100)
+    if(direction!='right'){
+        direction='left';
+        setTimeout(function(){
+            snake[s_len-1].angle = 180;
+        },150)
+    }
 }
 function move(){
     if(direction=='right'){
@@ -157,6 +171,25 @@ function move(){
                 snake[j].y = snake[j+1].y;
 
             }
+        }
+    }
+    contact()
+}
+function contact(obj1, obj2) {
+    obj1=snake[s_len-1];
+    obj2=food;
+    var distX = Math.abs(obj1.x - obj2.x);
+    var distY = Math.abs(obj1.y - obj2.y);
+    if (distX < 20 ) {
+        if (distY < 20) {
+            score+=1;
+            score_text.setText(`Score: ${score}`);
+            food.setVisible(false)
+            food.x = Phaser.Math.Between(20,W-40);
+            food.y = Phaser.Math.Between(20,H-40);
+            setTimeout(function(){
+                food.setVisible(true);
+            },1000);
         }
     }
 }
